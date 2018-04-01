@@ -30,8 +30,6 @@ services:
   #   command: [bash, -c, npm install && npm start]
 
   nuxt:
-    ports:
-      - '3000:3000'
     build: docker/nuxt
     volumes:
       - ./src/nuxt:/home/app/nuxt
@@ -48,7 +46,7 @@ services:
       DB_USER: 'pascal'
       DB_PASS: 'uKXSjP3B4PDm'
     volumes:
-      - ./src/laravel/:/home/app/laravel
+      - ./src/laravel/:/var/www/html/laravel
 
   data:
     image: busybox
