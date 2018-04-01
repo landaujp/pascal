@@ -1,0 +1,68 @@
+version: '2'
+
+services:
+
+  composer:
+    build: docker/composer
+    volumes:
+      - ./src/laravel:/home/app/laravel
+    command: ["composer", "install"]
+
+  nginx:
+    build: docker/nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    links:
+      - app
+      - nuxt
+    restart: always
+
+  # node:
+  #   build: docker/node
+  #   ports:
+  #     - '3000:3000'
+  #   volumes:
+  #     - ./src/node:/home/app/node
+  #     # - /home/app/node/node_modules
+  #   working_dir: /home/app/node
+  #   # command: bash -c "npm install && npm cache clean && node index.js"
+  #   command: [bash, -c, npm install && npm start]
+
+  nuxt:
+    ports:
+      - '3000:3000'
+    build: docker/nuxt
+    volumes:
+      - ./src/nuxt:/home/app/nuxt
+    working_dir: /home/app/nuxt
+    command: [bash, -c, npm install && npm run dev]
+
+  app:
+    build: docker/php-fpm
+    links:
+         - mysql
+    environment:
+      DB_HOST: 'mysql'
+      DB_NAME: 'pascal'
+      DB_USER: 'pascal'
+      DB_PASS: 'uKXSjP3B4PDm'
+    volumes:
+      - ./src/laravel/:/home/app/laravel
+
+  data:
+    image: busybox
+    volumes:
+      - ./docker/misc/data:/var/lib/mysql
+
+  mysql:
+    build: docker/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pascal
+      MYSQL_USER: pascal
+      MYSQL_PASSWORD: uKXSjP3B4PDm
+    ports:
+      - "13306:3306"
+    volumes_from:
+      - data
