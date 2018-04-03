@@ -17,4 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/', function(){ return 'helloworld';});
+Route::namespace('Api')->group(function () {
+    Route::get('/room',  'RoomController@index')->name('room.index');
+    Route::post('/room', 'RoomController@create')->name('room.create');
+});
