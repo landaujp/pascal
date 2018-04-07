@@ -25,6 +25,9 @@
 </template>
 <script>
 export default {
+    data () {
+        room_name: ''
+    },
     async asyncData ({app}) {
         const url = process.browser ? 'http://local.pascal.com' : 'http://nginx'
         const rooms = await app.$axios.$get(`${url}/api/room`)
@@ -33,11 +36,10 @@ export default {
     methods: {
         createRoom: function (event) {
             if (this.room_name != "") {
-                this.comments.push({comment: this.new_comment})
-                this.$axios.post('http://local.pascal.com/api/comment', {
-                    comment: this.new_comment
+                this.$axios.post('http://local.pascal.com/api/room', {
+                    name: this.room_name
                 }).then(res => {
-                    this.new_comment = ""
+                     this.$router.replace({ path: this.room_name })
                 }).catch(e => {
                     console.error(e)
                 })
