@@ -31,8 +31,9 @@ export default {
         return { new_comment: '' }
     },
     async asyncData({app, params}){
-        const rooms    = await app.$axios.$get('http://nginx/api/room')
-        const comments = await app.$axios.$get(`http://nginx/api/comment/${params.room}`)
+        const url = process.browser ? 'http://local.pascal.com' : 'http://nginx'
+        const rooms    = await app.$axios.$get(`${url}/api/room`)
+        const comments = await app.$axios.$get(`${url}/api/comment/${params.room}`)
         return {rooms: rooms, comments: comments};
     },
     methods: {

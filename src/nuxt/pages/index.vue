@@ -26,7 +26,8 @@
 <script>
 export default {
     async asyncData ({app}) {
-        const rooms = await app.$axios.$get('http://nginx/api/room')
+        const url = process.browser ? 'http://local.pascal.com' : 'http://nginx'
+        const rooms = await app.$axios.$get(`${url}/api/room`)
         return {rooms: rooms}
     },
     methods: {
