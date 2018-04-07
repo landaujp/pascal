@@ -12,12 +12,14 @@
                 </div>
             </div>
             <div class="col-md-9">
-                <div class="card-header">
-                    チャットルーム作成
+                <div class="form-inline">
+                    <input type="text" class="form-control" v-model="new_comment" size="90">
+                    <button class="btn btn-primary" @click="send">送信</button>
                 </div>
-                <div class="card-body form-inline">
-                    <input type="text" class="form-control" v-model="room_name">
-                    <button class="btn btn-primary" @click="createRoom">作成</button>
+                <div class="card">
+                    <div class="list-group list-group-flush">
+                        <span class="list-group-item" v-for="comment in comments" :key="comment.id">{{ comment.comment }}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -25,13 +27,17 @@
 </template>
 <script>
 export default {
-    async asyncData ({app}) {
-        const rooms = await app.$axios.$get('http://nginx/api/room')
-        return {rooms: rooms}
+    data () {
+        return { new_comment: '' }
+    },
+    async asyncData({app, params}){
+        const rooms    = await app.$axios.$get('http://nginx/api/room')
+        const comments = await app.$axios.$get(`http://nginx/api/comment/${params.room}`)
+        return {rooms: rooms, comments: comments};
     },
     methods: {
-        createRoom: function (event) {
-            if (this.room_name != "") {
+        send: function (event) {
+            if (this.new_comment != "") {
                 this.comments.push({comment: this.new_comment})
                 this.$axios.post('http://local.pascal.com/api/comment', {
                     comment: this.new_comment

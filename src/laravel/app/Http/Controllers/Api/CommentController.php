@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CommentCreateRequest;
 use App\Models\Comment;
+use App\Models\Room;
 
 class CommentController extends Controller
 {
@@ -22,11 +23,12 @@ class CommentController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index($room_name)
     {
-        $rooms = Comment::all();
+        $room     = Room::where('name', $room_name)->first();
+        $comments = Comment::where('room_id', $room->id)->get();
 
-        return response()->json($rooms);
+        return response()->json($comments);
     }
 
     /**

@@ -21,6 +21,6 @@ Route::namespace('Api')->group(function () {
     Route::get('/room',  'RoomController@index')->name('room.index');
     Route::post('/room', 'RoomController@create')->name('room.create');
 
-    Route::get('/comment',  'CommentController@index')->name('comment.index');
+    Route::get('/comment/{room_name}',  'CommentController@index')->name('comment.index');
     Route::post('/comment', 'CommentController@create')->name('comment.create');
 });
