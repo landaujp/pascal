@@ -7,19 +7,17 @@
                         チャットルーム一覧
                     </div>
                     <div class="list-group list-group-flush">
-                        <a href="/" class="list-group-item" v-for="room in rooms" :key="room.id">{{ room.name }}</a>
+                        <nuxt-link :to="room.name" class="list-group-item" v-for="room in rooms" :key="room.id">{{ room.name }}</nuxt-link>
                     </div>
                 </div>
             </div>
             <div class="col-md-9">
-                <div class="form-inline">
-                    <input type="text" class="form-control" v-model="new_comment" size="90">
-                    <button class="btn btn-primary" @click="send">送信</button>
+                <div class="card-header">
+                    チャットルーム作成
                 </div>
-                <div class="card">
-                    <div class="list-group list-group-flush">
-                        <span class="list-group-item" v-for="comment in comments" :key="comment.id">{{ comment.comment }}</span>
-                    </div>
+                <div class="card-body form-inline">
+                    <input type="text" class="form-control" v-model="room_name">
+                    <button class="btn btn-primary" @click="createRoom">作成</button>
                 </div>
             </div>
         </div>
@@ -28,21 +26,20 @@
 <script>
 export default {
     data () {
-        return { new_comment: '' }
+        room_name: ''
     },
-    async asyncData({app}){
-        const rooms    = await app.$axios.$get('http://172.20.0.6/api/room')
-        const comments = await app.$axios.$get('http://172.20.0.6/api/comment')
-        return {rooms: rooms, comments: comments};
+    async asyncData ({app}) {
+        const url = process.browser ? 'http://local.pascal.com' : 'http://nginx'
+        const rooms = await app.$axios.$get(`${url}/api/room`)
+        return {rooms: rooms}
     },
     methods: {
-        send: function (event) {
-            if (this.new_comment != "") {
-                this.comments.push({comment: this.new_comment})
-                this.$axios.post('http://local.pascal.com/api/comment', {
-                    comment: this.new_comment
+        createRoom: function (event) {
+            if (this.room_name != "") {
+                this.$axios.post('http://local.pascal.com/api/room', {
+                    name: this.room_name
                 }).then(res => {
-                    this.new_comment = ""
+                     this.$router.replace({ path: this.room_name })
                 }).catch(e => {
                     console.error(e)
                 })
