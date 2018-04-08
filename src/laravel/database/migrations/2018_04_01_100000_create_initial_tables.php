@@ -15,14 +15,14 @@ class CreateInitialTables extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name')->comment('チャットルーム名');
+            $table->string('name')->index()->comment('チャットルーム名');
             $table->timestamps();
         });
 
         Schema::create('comments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('room_id')->index()->comment('チャットルームID');
-            $table->unsignedBigInteger('user_name')->comment('ユーザー名');
+            $table->string('user_name')->comment('ユーザー名');
             $table->text('comment')->comment('コメント');
             $table->timestamps();
         });
