@@ -13,9 +13,6 @@ services:
     ports:
       - '80:80'
       - '443:443'
-    links:
-      - app
-      - nuxt
     restart: always
 
   # node:
@@ -38,8 +35,8 @@ services:
 
   app:
     build: docker/php-fpm
-    links:
-         - mysql
+    depends_on:
+      - mysql
     environment:
       DB_HOST: 'mysql'
       DB_NAME: 'pascal'
@@ -47,6 +44,8 @@ services:
       DB_PASS: 'uKXSjP3B4PDm'
     volumes:
       - ./src/laravel/:/var/www/html/laravel
+    working_dir: /var/www/html/laravel
+    command: [bash, -c, /opt/entrypoint.sh mysql pascal uKXSjP3B4PDm php artisan migrate && php-fpm]
 
   data:
     image: busybox
