@@ -15,9 +15,16 @@
                 <div class="card-header">
                     チャットルーム作成
                 </div>
-                <div class="card-body form-inline">
-                    <input type="text" class="form-control" v-model="room_name">
-                    <button class="btn btn-primary" @click="createRoom">作成</button>
+                <div class="card-body">
+                    <div class="alert alert-danger" role="alert" v-show="errors.length">
+                        <ul>
+                            <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+                        </ul>
+                    </div>
+                    <div class="form-inline">
+                        <input type="text" class="form-control" v-model="room_name">
+                        <button class="btn btn-primary" @click="createRoom">作成</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -26,12 +33,15 @@
 <script>
 export default {
     data () {
-        room_name: ''
+        return {
+            room_name: '',
+            errors: []
+        }
     },
     async asyncData ({app}) {
         const url = process.browser ? 'http://local.pascal.com' : 'http://nginx'
-        const rooms = await app.$axios.$get(`${url}/api/room`)
-        return {rooms: rooms}
+        const res = await app.$axios.$get(`${url}/api/room`)
+        return {rooms: res['data']}
     },
     methods: {
         createRoom: function (event) {
@@ -39,9 +49,10 @@ export default {
                 this.$axios.post('http://local.pascal.com/api/room', {
                     name: this.room_name
                 }).then(res => {
-                     this.$router.replace({ path: this.room_name })
-                }).catch(e => {
-                    console.error(e)
+                    this.errors = []
+                    this.$router.replace({ path: this.room_name })
+                }).catch(error => {
+                    this.errors = error.response.data['error']['detail']['name']
                 })
             }
         }

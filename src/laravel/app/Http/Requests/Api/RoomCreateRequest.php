@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Api;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Api\BaseFormRequest;
 
-class RoomCreateRequest extends FormRequest
+class RoomCreateRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class RoomCreateRequest extends FormRequest
     public function attributes()
     {
         return [
-            'name' => 'チャットルーム名',
+            'name' => 'チャットルームの名前',
         ];
     }
 
@@ -36,7 +36,7 @@ class RoomCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|alpha_dash_check|unique:rooms,name',
         ];
     }
 }
