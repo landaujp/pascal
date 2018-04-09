@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\CommentCreateRequest;
+use App\Http\Responses\SuccessResponse;
 use App\Models\Comment;
 use App\Models\Room;
 
@@ -28,7 +29,7 @@ class CommentController extends Controller
         $room     = Room::where('name', $room_name)->first();
         $comments = Comment::where('room_id', $room->id)->get();
 
-        return response()->json($comments);
+        return new SuccessResponse($comments);
     }
 
     /**
@@ -44,7 +45,7 @@ class CommentController extends Controller
         $comment->comment   = $request->comment;
         $comment->save();
 
-        return response()->json($comment);
+        return new SuccessResponse($comment);
     }
 
 }

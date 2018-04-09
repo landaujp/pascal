@@ -31,10 +31,10 @@ export default {
         return { new_comment: '' }
     },
     async asyncData({app, params}){
-        const url = process.browser ? 'http://local.pascal.com' : 'http://nginx'
-        const rooms    = await app.$axios.$get(`${url}/api/room`)
-        const comments = await app.$axios.$get(`${url}/api/comment/${params.room}`)
-        return {rooms: rooms, comments: comments};
+        const url  = process.browser ? 'http://local.pascal.com' : 'http://nginx'
+        const res1 = await app.$axios.$get(`${url}/api/room`)
+        const res2 = await app.$axios.$get(`${url}/api/comment/${params.room}`)
+        return {rooms: res1['data'], comments: res2['data']};
     },
     methods: {
         send: function (event) {

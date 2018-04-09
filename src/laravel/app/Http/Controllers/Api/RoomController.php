@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RoomCreateRequest;
+use App\Http\Responses\SuccessResponse;
 use App\Models\Room;
 
 class RoomController extends Controller
@@ -26,7 +27,7 @@ class RoomController extends Controller
     {
         $rooms = Room::all();
 
-        return response()->json($rooms);
+        return new SuccessResponse($rooms);
     }
 
     /**
@@ -40,7 +41,7 @@ class RoomController extends Controller
         $room->name = $request->name;
         $room->save();
 
-        return response()->json($room);
+        return new SuccessResponse($room);
     }
 
 }
