@@ -2,14 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        チャットルーム一覧
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <nuxt-link :to="room.name" class="list-group-item" v-for="room in rooms" :key="room.id">{{ room.name }}</nuxt-link>
-                    </div>
-                </div>
+                <side-bar></side-bar>
             </div>
             <div class="col-md-9">
                 <div class="card-header">
@@ -31,17 +24,18 @@
     </div>
 </template>
 <script>
+
+import SideBar from '~/components/SideBar.vue'
+
 export default {
+    components: {
+        SideBar
+    },
     data () {
         return {
             room_name: '',
             errors: []
         }
-    },
-    async asyncData ({app}) {
-        const url = process.browser ? 'http://local.pascal.com' : 'http://nginx'
-        const res = await app.$axios.$get(`${url}/api/room`)
-        return {rooms: res['data']}
     },
     methods: {
         createRoom: function (event) {

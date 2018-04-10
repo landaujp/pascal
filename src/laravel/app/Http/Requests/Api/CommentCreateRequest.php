@@ -24,7 +24,8 @@ class CommentCreateRequest extends BaseFormRequest
     public function attributes()
     {
         return [
-            'comment' => 'コメント',
+            'user_name' => '名前',
+            'comment'   => 'コメント',
         ];
     }
 
@@ -36,7 +37,8 @@ class CommentCreateRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'comment' => 'required|string',
+            'user_name' => 'required|string',
+            'comment'   => 'required|string',
         ];
     }
 }

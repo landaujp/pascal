@@ -39,9 +39,11 @@ class CommentController extends Controller
      */
     public function create(CommentCreateRequest $request)
     {
+        $room = Room::where('name', $request->room_name)->first();
+
         $comment = new Comment();
-        $comment->room_id   = 1;
-        $comment->user_name = 'ishino';
+        $comment->room_id   = $room->id;
+        $comment->user_name = $request->user_name;
         $comment->comment   = $request->comment;
         $comment->save();
 
