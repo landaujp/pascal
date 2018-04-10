@@ -2,23 +2,27 @@
     <div class="container">
         <div class="row">
             <div class="col-md-3">
-                <div class="card">
-                    <div class="card-header">
-                        チャットルーム一覧
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <nuxt-link :to="room.name" class="list-group-item" v-for="room in rooms" :key="room.id">{{ room.name }}</nuxt-link>
-                    </div>
-                </div>
+                <side-bar :room_name="room_name"></side-bar>
             </div>
             <div class="col-md-9">
-                <div class="form-inline">
-                    <input type="text" class="form-control" v-model="new_comment" size="90">
-                    <button class="btn btn-primary" @click="send">送信</button>
+                <div v-if="user_name">
+                    <div class="form-inline">
+                        <input type="text" class="form-control" v-model="new_comment" size="90">
+                        <button class="btn btn-primary" @click="send">送信</button>
+                    </div>
+                    <div class="card">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item" v-for="comment in comments" :key="comment.id">
+                                <span class="font-weight-bold">{{ comment.user_name }}</span><span class="font-italic">{{ comment.created_at | time }}</span><br>
+                                {{ comment.comment }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card">
-                    <div class="list-group list-group-flush">
-                        <span class="list-group-item" v-for="comment in comments" :key="comment.id">{{ comment.comment }}</span>
+                <div v-else>
+                    <div class="form-inline">
+                        <input type="text" class="form-control" v-model="form_user_name">
+                        <button class="btn btn-primary" @click="sayName(form_user_name)">名前を入力</button>
                     </div>
                 </div>
             </div>
@@ -26,28 +30,49 @@
     </div>
 </template>
 <script>
+
+import SideBar from '~/components/SideBar.vue'
+
 export default {
+    components: {
+        SideBar
+    },
     data () {
-        return { new_comment: '' }
+        return {
+            new_comment: '',
+            user_name: process.browser ? localStorage.getItem('user_name') : ''
+        }
     },
     async asyncData({app, params}){
-        const url  = process.browser ? 'http://local.pascal.com' : 'http://nginx'
-        const res1 = await app.$axios.$get(`${url}/api/room`)
-        const res2 = await app.$axios.$get(`${url}/api/comment/${params.room}`)
-        return {rooms: res1['data'], comments: res2['data']};
+        const url = process.browser ? 'http://local.pascal.com' : 'http://nginx'
+        const res = await app.$axios.$get(`${url}/api/comment/${params.room}`)
+        return {room_name: params.room, comments: res['data']};
     },
     methods: {
+        sayName: function (user_name) {
+            localStorage.setItem('user_name', user_name)
+            this.user_name = user_name
+        },
         send: function (event) {
             if (this.new_comment != "") {
-                this.comments.push({comment: this.new_comment})
                 this.$axios.post('http://local.pascal.com/api/comment', {
+                    room_name: this.room_name,
+                    user_name: localStorage.getItem('user_name'),
                     comment: this.new_comment
                 }).then(res => {
+                    this.comments.push(res['data']['data'])
                     this.new_comment = ""
                 }).catch(e => {
                     console.error(e)
                 })
             }
+        }
+    },
+    filters: {
+        time: function (value) {
+            if (!value) return ''
+            value = value.toString()
+            return value
         }
     }
 }
