@@ -13,7 +13,7 @@
                     <div class="card">
                         <div class="list-group list-group-flush">
                             <div class="list-group-item" v-for="comment in comments" :key="comment.id">
-                                <span class="font-weight-bold">{{ comment.user_name }}</span><span class="font-italic">{{ comment.created_at | time }}</span><br>
+                                <span class="font-weight-bold">{{ comment.user_name }}</span><span class="font-italic">{{ comment.created_at | moment }}</span><br>
                                 {{ comment.comment }}
                             </div>
                         </div>
@@ -32,6 +32,7 @@
 <script>
 
 import SideBar from '~/components/SideBar.vue'
+import moment from 'moment'
 
 export default {
     components: {
@@ -40,7 +41,8 @@ export default {
     data () {
         return {
             new_comment: '',
-            user_name: process.browser ? localStorage.getItem('user_name') : ''
+            user_name: process.browser ? localStorage.getItem('user_name') : '',
+            form_user_name: '',
         }
     },
     async asyncData({app, params}){
@@ -69,10 +71,8 @@ export default {
         }
     },
     filters: {
-        time: function (value) {
-            if (!value) return ''
-            value = value.toString()
-            return value
+        moment: function (date) {
+            return moment(date).format('M/D HH:mm');
         }
     }
 }

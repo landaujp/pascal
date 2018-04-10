@@ -16,7 +16,7 @@ export default {
     ],
     data () {
         return {
-            rooms: process.browser ? JSON.parse(localStorage.getItem('rooms')) : [],
+            rooms: process.browser && localStorage.getItem('rooms') ? JSON.parse(localStorage.getItem('rooms')) : [],
         }
     },
     computed: {
