@@ -1,21 +1,24 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
+            <div class="side-bar col-md-3">
                 <side-bar :room_name="room_name"></side-bar>
             </div>
-            <div class="col-md-9">
+            <div class="main col-md-9">
                 <div v-if="user_name">
-                    <div class="form-inline">
-                        <input type="text" class="form-control" v-model="new_comment" size="90">
-                        <button class="btn btn-primary" @click="send">送信</button>
-                    </div>
-                    <div class="card">
-                        <div class="list-group list-group-flush">
+                    <div class="main-comments card">
+                        <div class="main-comments-info"></div>
+                        <div class="main-comments-list list-group list-group-flush">
                             <div class="list-group-item" v-for="comment in comments" :key="comment.id">
                                 <span class="font-weight-bold">{{ comment.user_name }}</span><span class="font-italic">{{ comment.created_at | moment }}</span><br>
                                 {{ comment.comment }}
                             </div>
+                        </div>
+                    </div>
+                    <div class="main-form">
+                        <div class="form-inline">
+                            <input type="text" class="form-control" v-model="new_comment" size="119">
+                            <button class="btn btn-primary" @click="send">送信</button>
                         </div>
                     </div>
                 </div>
@@ -29,6 +32,12 @@
         </div>
     </div>
 </template>
+<style scoped>
+.form-control{
+    width:100%;
+}
+</style>
+
 <script>
 
 import SideBar from '~/components/SideBar.vue'
