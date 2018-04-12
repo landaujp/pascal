@@ -6,11 +6,13 @@
             </div>
             <div class="main col-md-9">
                 <div v-if="user_name">
-                    <div class="main-comments card">
-                        <div class="main-comments-info"></div>
+                    <div id="comments" class="main-comments card">
+                        <div class="main-comments-info">
+                            <h2>{{room_name}}</h2>
+                        </div>
                         <div class="main-comments-list list-group list-group-flush">
                             <div class="list-group-item" v-for="comment in comments" :key="comment.id">
-                                <span class="font-weight-bold">{{ comment.user_name }}</span><span class="font-italic">{{ comment.created_at | moment }}</span><br>
+                                <span class="font-weight-bold">{{ comment.user_name }}</span><span class="ml-4">{{ comment.created_at | moment }}</span><br>
                                 {{ comment.comment }}
                             </div>
                         </div>
@@ -30,6 +32,10 @@
                 </div>
             </div>
         </div>
+        <script>
+            var obj = document.getElementById("comments");
+            obj.scrollTop = obj.scrollHeight;
+        </script>
     </div>
 </template>
 <style scoped>
