@@ -1,0 +1,8 @@
+<script src="https://cdn.socket.io/socket.io-1.4.8.js"></script>
+<script>
+  var socket = io.connect('http://local.pascal.com/socket.io');
+
+  socket.on('update', function(socket){
+    console.log('received emit!');
+  });
+</script>

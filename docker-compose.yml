@@ -15,16 +15,14 @@ services:
       - '443:443'
     restart: always
 
-  # node:
-  #   build: docker/node
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - ./src/node:/home/app/node
-  #     # - /home/app/node/node_modules
-  #   working_dir: /home/app/node
-  #   # command: bash -c "npm install && npm cache clean && node index.js"
-  #   command: [bash, -c, npm install && npm start]
+  node:
+    build: docker/node
+    ports:
+      - '3001:3001'
+    volumes:
+      - ./src/node:/home/app/node
+    working_dir: /home/app/node
+    command: bash -c "npm install && node index.js"
 
   nuxt:
     build: docker/nuxt
@@ -63,3 +61,8 @@ services:
       - "13306:3306"
     volumes_from:
       - data
+
+  redis:
+    build: docker/redis
+    ports:
+      - "16379:6379"

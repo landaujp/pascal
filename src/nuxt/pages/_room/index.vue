@@ -6,7 +6,7 @@
             </div>
             <div class="main col-md-9">
                 <div v-if="user_name">
-                    <div id="comments" class="main-comments card">
+                    <div class="main-comments card" ref="comments">
                         <div class="main-comments-info">
                             <h2>{{room_name}}</h2>
                         </div>
@@ -32,10 +32,6 @@
                 </div>
             </div>
         </div>
-        <script>
-            var obj = document.getElementById("comments");
-            obj.scrollTop = obj.scrollHeight;
-        </script>
     </div>
 </template>
 <style scoped>
@@ -47,7 +43,8 @@
 <script>
 
 import SideBar from '~/components/SideBar.vue'
-import moment from 'moment'
+import io      from 'socket.io-client'
+import moment  from 'moment'
 
 export default {
     components: {
@@ -59,6 +56,17 @@ export default {
             user_name: process.browser ? localStorage.getItem('user_name') : '',
             form_user_name: '',
         }
+    },
+    beforeMount() {
+        const socket = io.connect()
+        const e = this
+        socket.on("chat1", function(message) {
+            e.comments.push(JSON.parse(message))
+            this.scrollToBottom()
+        })
+    },
+    mounted() {
+        this.scrollToBottom()
     },
     async asyncData({app, params}){
         const url = process.browser ? 'http://local.pascal.com' : 'http://nginx'
@@ -77,12 +85,18 @@ export default {
                     user_name: localStorage.getItem('user_name'),
                     comment: this.new_comment
                 }).then(res => {
-                    this.comments.push(res['data']['data'])
                     this.new_comment = ""
                 }).catch(e => {
                     console.error(e)
                 })
             }
+        },
+        scrollToBottom() {
+            this.$nextTick(() => {
+                if (this.user_name) {
+                    this.$refs.comments.scrollTop = this.$refs.comments.scrollHeight
+                }
+            })
         }
     },
     filters: {

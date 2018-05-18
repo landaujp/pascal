@@ -4,16 +4,7 @@ ADD php.ini /usr/local/etc/php/conf.d/php.ini
 ADD entrypoint.sh /opt/entrypoint.sh
 RUN chmod a+x /opt/entrypoint.sh
 
-RUN apt-get update \
-  && docker-php-ext-install pdo_mysql mysqli mbstring
-RUN apt-get install -y mysql-client
-
-ENV PHPREDIS_VERSION php7
-
-#RUN curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz
-
-#RUN tar xfz /tmp/redis.tar.gz \
-#    && rm -r /tmp/redis.tar.gz \
-#    && mkdir -p /usr/src/php/ext \
-#    && mv phpredis-$PHPREDIS_VERSION /usr/src/php/ext/redis \
-#    && docker-php-ext-install redis
+RUN apt-get update
+RUN apt-get install -y mysql-client git
+RUN git clone https://github.com/phpredis/phpredis.git /usr/src/php/ext/redis
+RUN docker-php-ext-install pdo_mysql mysqli mbstring redis
