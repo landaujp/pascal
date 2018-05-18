@@ -47,9 +47,11 @@ class CommentController extends Controller
         $comment->comment   = $request->comment;
         $comment->save();
 
+        $comment->room_name = $request->room_name;
+
         $redis = new \Redis();
-        $redis->connect("redis", 6379);
-        $redis->publish('test_1', $comment);
+        $redis->connect('redis', 6379);
+        $redis->publish('chat', $comment);
 
         return new SuccessResponse($comment);
     }

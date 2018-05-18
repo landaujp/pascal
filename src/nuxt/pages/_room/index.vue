@@ -60,9 +60,9 @@ export default {
     beforeMount() {
         const socket = io.connect()
         const e = this
-        socket.on("chat1", function(message) {
+        socket.on(this.room_name, function(message) {
             e.comments.push(JSON.parse(message))
-            this.scrollToBottom()
+            e.scrollToBottom()
         })
     },
     mounted() {

@@ -1,7 +1,8 @@
 let io         = require('socket.io')(3001)
 let subscriber = require('redis').createClient(6379, 'redis')
 
-subscriber.subscribe(['test_1'])
-subscriber.on('message', function(channel, message) {
-    io.emit('chat1', message)
+subscriber.subscribe(['chat'])
+subscriber.on('message', function(channel, data) {
+    const comment = JSON.parse(data)
+    io.emit(comment.room_name, data)
 })
