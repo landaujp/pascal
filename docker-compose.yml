@@ -1,36 +1,31 @@
-version: '2'
-
+version: '3'
 services:
-
   composer:
-    build: docker/composer
+    image: composer:latest
     volumes:
       - ./src/laravel:/home/app/laravel
+    working_dir: /home/app/laravel
     command: ["composer", "install"]
-
   nginx:
     build: docker/nginx
     ports:
       - '80:80'
       - '443:443'
     restart: always
-
   node:
-    build: docker/node
+    image: node:latest
     ports:
       - '3001:3001'
     volumes:
       - ./src/node:/home/app/node
     working_dir: /home/app/node
     command: bash -c "npm install && node index.js"
-
   nuxt:
-    build: docker/nuxt
+    image: node:latest
     volumes:
       - ./src/nuxt:/home/app/nuxt
     working_dir: /home/app/nuxt
     command: [bash, -c, npm install && npm run dev]
-
   app:
     build: docker/php-fpm
     depends_on:
@@ -44,14 +39,8 @@ services:
       - ./src/laravel/:/var/www/html/laravel
     working_dir: /var/www/html/laravel
     command: [bash, -c, /opt/entrypoint.sh mysql pascal uKXSjP3B4PDm php artisan migrate && php-fpm]
-
-  data:
-    image: busybox
-    volumes:
-      - ./docker/misc/data:/var/lib/mysql
-
   mysql:
-    build: docker/mysql
+    image: mysql:5.7.22
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: pascal
@@ -59,10 +48,11 @@ services:
       MYSQL_PASSWORD: uKXSjP3B4PDm
     ports:
       - "13306:3306"
-    volumes_from:
-      - data
-
+    volumes:
+      - datavol:/var/lib/mysql
   redis:
-    build: docker/redis
+    image: redis:latest
     ports:
       - "16379:6379"
+volumes:
+  datavol:
