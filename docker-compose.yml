@@ -1,7 +1,7 @@
 version: '3'
 services:
   composer:
-    image: composer:latest
+    image: composer:1.8.0
     volumes:
       - ./src/laravel:/home/app/laravel
     working_dir: /home/app/laravel
@@ -13,7 +13,7 @@ services:
       - '443:443'
     restart: always
   node:
-    image: node:latest
+    image: node:11.6.0
     ports:
       - '3001:3001'
     volumes:
@@ -21,7 +21,7 @@ services:
     working_dir: /home/app/node
     command: bash -c "npm install && node index.js"
   nuxt:
-    image: node:latest
+    image: node:11.6.0
     volumes:
       - ./src/nuxt:/home/app/nuxt
     working_dir: /home/app/nuxt
@@ -51,7 +51,7 @@ services:
     volumes:
       - datavol:/var/lib/mysql
   redis:
-    image: redis:latest
+    image: redis:5.0.3
     ports:
       - "16379:6379"
 volumes:

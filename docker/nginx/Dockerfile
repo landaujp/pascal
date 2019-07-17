@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:1.15.8
 
 COPY etc/nginx/* /etc/nginx/conf.d/
 #ADD entrypoint.sh /opt/entrypoint.sh
